@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sound Card Installation Lab</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <button class="sidebar-toggle" id="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="lab-sidebar" id="lab-sidebar">
+        <div class="sidebar-header">
+            <h2>🔊 Sound Card Lab</h2>
+            <p>Installing the Sound Card</p>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <button class="restart-btn" id="restart-btn" onclick="resetLab()" style="display:none;">🖱️ Restart
+                Lab</button>
+        </div>
+        <div class="lab-steps">
+            <div class="step-group">
+                <div class="step-group-title">Task 1: Hardware Installation</div>
+                <div class="step-card" id="step-flip">
+                    <div class="step-title"><span>Open Laptop</span><span class="step-status">Pending</span></div>
+                    <div class="step-desc">View the front of the laptop</div>
+                </div>
+                <div class="step-card" id="step-open">
+                    <div class="step-title"><span>Open the Motherboard</span><span class="step-status">Pending</span>
+                    </div>
+                    <div class="step-desc">Remove screws and open motherboard panel</div>
+                </div>
+                <div class="step-card" id="step-install">
+                    <div class="step-title"><span>Install Sound Card</span><span class="step-status">Pending</span>
+                    </div>
+                    <div class="step-desc">Drag sound card to the slot</div>
+                </div>
+                <div class="step-card" id="step-close">
+                    <div class="step-title"><span>Close Panel</span><span class="step-status">Pending</span>
+                    </div>
+                    <div class="step-desc">Secure the motherboard panel</div>
+                </div>
+            </div>
+            <div class="step-group">
+                <div class="step-group-title">Task 2: Software Installation</div>
+                <div class="step-card" id="step-boot">
+                    <div class="step-title"><span>Boot Windows 11</span><span class="step-status">Pending</span></div>
+                    <div class="step-desc">Turn on the laptop</div>
+                </div>
+                <div class="step-card" id="step-settings">
+                    <div class="step-title"><span>Open Settings</span><span class="step-status">Pending</span></div>
+                    <div class="step-desc">Click Settings icon on taskbar</div>
+                </div>
+                <div class="step-card" id="step-driver">
+                    <div class="step-title"><span>Install Driver</span><span class="step-status">Pending</span></div>
+                    <div class="step-desc">Install the sound card driver</div>
+                </div>
+                <div class="step-card" id="step-verify">
+                    <div class="step-title"><span>Verify Installation</span><span class="step-status">Pending</span>
+                    </div>
+                    <div class="step-desc">Confirm sound card is working</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content" id="main-content">
+        <div class="phase-tabs">
+            <button class="phase-tab active" id="tab-hardware" onclick="switchPhase('hardware')">🔧 Hardware
+                Installation</button>
+            <button class="phase-tab" id="tab-software" onclick="switchPhase('software')" disabled>💻 Software
+                Installation</button>
+        </div>
+
+        <div class="workspace" id="workspace">
+            <div class="hardware-view" id="hardware-phase">
+                <div class="hardware-row">
+                    <div class="laptop-container" id="laptop-container">
+                        <img src="images/laptop_back_closed.png" alt="Laptop Front" class="laptop-image" id="laptop-front">
+                        <img src="images/laptop_front.png" alt="Laptop Back Closed" class="laptop-image hidden"
+                            id="laptop-back-closed">
+                        <img src="images/laptop_back.png" alt="Laptop Back Open" class="laptop-image hidden"
+                            id="laptop-back-open">
+                        <div class="laptop-slot" id="laptop-slot"></div>
+                    </div>
+                    <div class="toolbox" id="toolbox" style="display:none;">
+                        <div class="toolbox-title">🧰 Components</div>
+                        <img src="images/sound_card.png" alt="Sound Card" class="sound-card-draggable" id="sound-card"
+                            draggable="true" ondragstart="dragStart(event)" ondragend="dragEnd(event)">
+                        <span style="color:rgba(255,255,255,0.6); font-size:12px;">PCIe Sound Card</span>
+                    </div>
+                </div>
+                <div class="action-buttons" id="hardware-actions">
+                    <button class="action-btn primary" id="btn-flip" onclick="flipLaptop()">🖱️ Click to Open</button>
+                    <button class="action-btn primary" id="btn-open" onclick="openPanel()" style="display:none;">🔓 Open
+                        Motherboard panel</button>
+                    <button class="action-btn success" id="btn-close" onclick="closePanel()" style="display:none;">🔒
+                        Close Motherboard panel</button>
+                    <button class="action-btn success" id="btn-continue" onclick="switchPhase('software')"
+                        style="display:none;">Continue to Software →</button>
+                </div>
+            </div>
+
+            <div class="software-view" id="software-phase" style="display:none;">
+                <div class="laptop-device">
+                    <div class="laptop-screen-frame">
+                        <div class="laptop-bezel">
+                            <div class="laptop-display">
+                                <div class="win11-screen" id="win11-screen">
+                                    <div class="win11-logo-bg"><svg viewBox="0 0 24 24" fill="white">
+                                            <path
+                                                d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
+                                        </svg></div>
+                                    <div class="boot-screen" id="boot-screen"><svg class="boot-logo" viewBox="0 0 24 24"
+                                            fill="white">
+                                            <path
+                                                d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
+                                        </svg>
+                                        <div class="boot-spinner"></div>
+                                    </div>
+                                    <div class="win11-desktop" id="win11-desktop" style="display:none;">
+                                        <div class="desktop-icon"><svg viewBox="0 0 24 24" fill="#FFD54F">
+                                                <path
+                                                    d="M20 18c1.1 0 1.99-.9 1.99-2L22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2h-4zM4 6h16v10H4V6z" />
+                                            </svg><span>This PC</span></div>
+                                        <div class="desktop-icon"><svg viewBox="0 0 24 24" fill="#90CAF9">
+                                                <path
+                                                    d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+                                            </svg><span>Recycle Bin</span></div>
+                                    </div>
+                                    <div class="win11-window" id="settings-window">
+                                        <div class="win-titlebar"><span class="win-title">Settings</span>
+                                            <div class="win-controls">
+                                                <div class="win-control">─</div>
+                                                <div class="win-control">□</div>
+                                                <div class="win-control close" onclick="closeSettings()">✕</div>
+                                            </div>
+                                        </div>
+                                        <div class="win-content">
+                                            <div class="settings-sidebar">
+                                                <div class="settings-nav-item">System</div>
+                                                <div class="settings-nav-item active">Sound</div>
+                                                <div class="settings-nav-item">Display</div>
+                                                <div class="settings-nav-item">Power</div>
+                                            </div>
+                                            <div class="settings-main">
+                                                <h1 class="settings-title">Sound</h1>
+                                                <div class="settings-section">
+                                                    <div class="settings-row">
+                                                        <div>
+                                                            <div class="settings-label">Output Device</div>
+                                                            <div class="settings-value" id="output-device">Speakers
+                                                                (Realtek)
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="settings-section">
+                                                    <div class="settings-row">
+                                                        <div>
+                                                            <div class="settings-label">PCIe Sound Card</div>
+                                                            <div class="settings-value" id="driver-status">Driver not
+                                                                installed
+                                                            </div>
+                                                        </div>
+                                                        <div id="driver-action"><button class="install-btn"
+                                                                id="install-driver-btn"
+                                                                onclick="installDriver()">Install</button></div>
+                                                    </div>
+                                                    <div class="settings-row" id="install-progress-row"
+                                                        style="display:none;">
+                                                        <div class="settings-label">Installing...</div>
+                                                        <div class="progress-install">
+                                                            <div class="progress-install-bar" id="driver-progress">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="settings-section" id="sound-card-status"
+                                                    style="display:none;">
+                                                    <div class="settings-row">
+                                                        <div>
+                                                            <div class="settings-label">Sound Blaster Audigy</div>
+                                                            <div class="settings-value">Ready</div>
+                                                        </div><span class="status-badge success">✓ OK</span>
+                                                    </div>
+                                                    <div class="settings-row">
+                                                        <div class="settings-label">Set as default</div><button
+                                                            class="install-btn installed"
+                                                            onclick="setDefault()">Set</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="win-notification" id="win-notification"><button
+                                            class="notification-close" onclick="closeNotification()">✕</button>
+                                        <div class="notification-header">
+                                            <div class="notification-icon">✓</div>
+                                            <div class="notification-title">Complete !</div>
+                                        </div>
+                                        <div class="notification-body">Sound card is now your default audio device.
+                                        </div>
+                                    </div>
+                                    <div class="win11-taskbar">
+                                        <div class="taskbar-center">
+                                            <div class="taskbar-icon"><svg viewBox="0 0 24 24" fill="white">
+                                                    <path
+                                                        d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-12.9-1.801" />
+                                                </svg></div>
+                                            <div class="taskbar-icon"><svg viewBox="0 0 24 24" fill="white">
+                                                    <path
+                                                        d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-5.34c-.47-2.78-2.79-5-5.59-5.34a6.505 6.505 0 0 0-7.27 7.27c.34 2.8 2.56 5.12 5.34 5.59a6.5 6.5 0 0 0 5.34-1.48l.27.28v.79l4.25 4.25c.41.41 1.08.41 1.49 0 .41-.41.41-1.08 0-1.49L15.5 14zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                                                </svg></div>
+                                            <div class="taskbar-divider"></div>
+                                            <div class="taskbar-icon"><svg viewBox="0 0 24 24" fill="#FFD54F">
+                                                    <path
+                                                        d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z" />
+                                                </svg></div>
+                                            <div class="taskbar-icon"><svg viewBox="0 0 24 24" fill="#0078D4">
+                                                    <path
+                                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
+                                                </svg></div>
+                                            <div class="taskbar-icon" onclick="openSettings()"><svg viewBox="0 0 24 24"
+                                                    fill="white">
+                                                    <path
+                                                        d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
+                                                </svg></div>
+                                        </div>
+                                        <div class="system-tray"><svg viewBox="0 0 24 24" fill="white">
+                                                <path
+                                                    d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z" />
+                                            </svg><svg viewBox="0 0 24 24" fill="white">
+                                                <path
+                                                    d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+                                            </svg><svg viewBox="0 0 24 24" fill="white">
+                                                <path
+                                                    d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4zM15 18H9V6h6v12z" />
+                                            </svg>
+                                            <div class="datetime" id="datetime">
+                                                <div class="time" id="clock-time">9:51 PM</div>
+                                                <div class="date" id="clock-date">12/5/2024</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="laptop-hinge"></div>
+                    <div class="laptop-base">
+                        <div class="keyboard">
+                            <div class="keyboard-row">
+                                <div class="key">Esc</div>
+                                <div class="key">F1</div>
+                                <div class="key">F2</div>
+                                <div class="key">F3</div>
+                                <div class="key">F4</div>
+                                <div class="key">F5</div>
+                                <div class="key">F6</div>
+                                <div class="key">F7</div>
+                                <div class="key">F8</div>
+                                <div class="key">F9</div>
+                                <div class="key">F10</div>
+                                <div class="key">F11</div>
+                                <div class="key">F12</div>
+                                <div class="key">Del</div>
+                            </div>
+                            <div class="keyboard-row">
+                                <div class="key">`</div>
+                                <div class="key">1</div>
+                                <div class="key">2</div>
+                                <div class="key">3</div>
+                                <div class="key">4</div>
+                                <div class="key">5</div>
+                                <div class="key">6</div>
+                                <div class="key">7</div>
+                                <div class="key">8</div>
+                                <div class="key">9</div>
+                                <div class="key">0</div>
+                                <div class="key">-</div>
+                                <div class="key">=</div>
+                                <div class="key wide">⌫</div>
+                            </div>
+                            <div class="keyboard-row">
+                                <div class="key wide">Tab</div>
+                                <div class="key">Q</div>
+                                <div class="key">W</div>
+                                <div class="key">E</div>
+                                <div class="key">R</div>
+                                <div class="key">T</div>
+                                <div class="key">Y</div>
+                                <div class="key">U</div>
+                                <div class="key">I</div>
+                                <div class="key">O</div>
+                                <div class="key">P</div>
+                                <div class="key">[</div>
+                                <div class="key">]</div>
+                                <div class="key">\</div>
+                            </div>
+                            <div class="keyboard-row">
+                                <div class="key wider">Caps</div>
+                                <div class="key">A</div>
+                                <div class="key">S</div>
+                                <div class="key">D</div>
+                                <div class="key">F</div>
+                                <div class="key">G</div>
+                                <div class="key">H</div>
+                                <div class="key">J</div>
+                                <div class="key">K</div>
+                                <div class="key">L</div>
+                                <div class="key">;
+
+                                </div>
+                                <div class="key">'</div>
+                                <div class="key enter">Enter</div>
+                            </div>
+                            <div class="keyboard-row">
+                                <div class="key wider">Shift</div>
+                                <div class="key">Z</div>
+                                <div class="key">X</div>
+                                <div class="key">C</div>
+                                <div class="key">V</div>
+                                <div class="key">B</div>
+                                <div class="key">N</div>
+                                <div class="key">M</div>
+                                <div class="key">,
+                                </div>
+                                <div class="key">.</div>
+                                <div class="key">/</div>
+                                <div class="key wider">Shift</div>
+                                <div class="key">↑</div>
+                            </div>
+                            <div class="keyboard-row">
+                                <div class="key wide">Ctrl</div>
+                                <div class="key">Fn</div>
+                                <div class="key">⊞</div>
+                                <div class="key">Alt</div>
+                                <div class="key space"></div>
+                                <div class="key">Alt</div>
+                                <div class="key">Ctrl</div>
+                                <div class="key">←</div>
+                                <div class="key">↓</div>
+                                <div class="key">→</div>
+                            </div>
+                        </div>
+                        <div class="trackpad"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="script.js"></script>
+</body>
+
+</html>
